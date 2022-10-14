@@ -1,3 +1,4 @@
+const validator = require('validator');
 const { register, verifyToken, login } = require('../services/userService');
 const { parseError } = require('../util/parser');
 
@@ -12,8 +13,15 @@ authController.get('/register', (req, res) => {
 authController.post('/register', async (req, res) => {
     try {
 
+        if(validator.isEmail(req.body.email) == false) {
+            throw new Error('Invalid email');
+        }
         if(req.body.username == '' || req.body.password == '') {
             throw new Error ('All fields are required');
+        }
+
+        if(req.body.password.length < 5) {
+            throw new Error('Password must be at least 5 characters long');
         }
 
         if(req.body.password !== req.body.rePassword) {
@@ -50,10 +58,10 @@ authController.get('/login', (req, res) => {
 authController.post('/login', async (req, res) => {
 
     try {
-        if(req.body.username == '' || req.body.password == '') {
+        if(req.body.email == '' || req.body.password == '') {
             throw new Error ('All fields are required');
         }
-        const token = await login(req.body.username, req.body.password);
+        const token = await login(req.body.email, req.body.password);
         res.cookie('token', token);
         res.redirect('/');
 
@@ -62,7 +70,7 @@ authController.post('/login', async (req, res) => {
         const errors = parseError(error);
         res.render('login', {
             title: 'Login Page',
-            username: req.body.username,
+            email: req.body.email,
             errors
         }); 
     }

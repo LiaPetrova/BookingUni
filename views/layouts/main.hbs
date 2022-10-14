@@ -10,32 +10,42 @@
 <body>
 
     <div id="container">
-{{!-- 
+
         <div>
-            <div class="notification loadingBox">
+            {{!-- <div class="notification loadingBox">
                 Loading &hellip;
             </div>
             <div class="notification infoBox">
                 <span>Info</span>
-            </div>
+            </div> --}}
+            {{#if errors}}
             <div class="notification errorBox">
-                <span>Error</span>
+                {{#each errors}}
+                <span>{{this}}</span>
+                {{/each}}
             </div>
-        </div> --}}
+            {{/if}}
+        </div>
 
         <nav>
             <div class="left-container">
                 <ul>
+                    {{#if username}}
                     <li><a href="/">Home</a></li>
                     <li><a href="/hotel/create">Add +</a></li>
+                    {{else}}
                     <li><a href="/auth/login">Login</a></li>
                     <li><a href="/auth/register">Register</a></li>
+                    {{/if}}
                 </ul>
             </div>
+
+            {{#if username}}
             <div class="right-container">
-                <a href="/profile" class="log-out">Plceholder{{name}}</a>
+                <a href="/profile" class="log-out">{{username}}</a>
                 <a href="/auth/logout" class="log-out">Logout</a>
             </div>
+            {{/if}}
         </nav>
         {{{body}}}
 
